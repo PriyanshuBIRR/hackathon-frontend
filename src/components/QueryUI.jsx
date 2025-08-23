@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import { useMutation } from '../hooks/useAPI';
+import { queryAPI } from '../services/apiEndpoints';
 
 const QueryUI = () => {
   const [query, setQuery] = useState('');
   const [responses, setResponses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Use the mutation hook for API calls
+  const { mutate: runQuery } = useMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +28,7 @@ const QueryUI = () => {
     setResponses(prev => [...prev, newResponse]);
 
     try {
-      // Simulate API call - replace with your actual API
+      // Replace simulateAPICall with actual API call
       const response = await simulateAPICall(userQuery);
       
       setResponses(prev => 
@@ -34,7 +39,7 @@ const QueryUI = () => {
         )
       );
     } catch (error) {
-        console.log("this is the error : ", error)
+        console.log("this is the error : ", error);
       setResponses(prev => 
         prev.map(item => 
           item.id === newResponse.id 
@@ -47,12 +52,10 @@ const QueryUI = () => {
     }
   };
 
-  const simulateAPICall = (query) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(`This is a response to: "${query}". Here's some detailed information about your query with multiple sentences to show how the response appears in the UI.`);
-      }, 1500);
-    });
+  const simulateAPICall = async (query) => {
+    // Replace simulation with actual API call to your FastAPI backend
+    const result = await runQuery(() => queryAPI.runQuery(query));
+    return result.result;
   };
 
   return (
