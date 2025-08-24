@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAPI, useMutation } from './useAPI';
 import { conversationAPI } from '../services/apiEndpoints';
 
-// Hook to fetch conversations with search functionality
 export const useConversations = (searchTerm = '', limit = 50) => {
   const { 
     data: conversationsData, 
@@ -24,7 +23,6 @@ export const useConversations = (searchTerm = '', limit = 50) => {
   };
 };
 
-// Hook to fetch messages from a specific conversation
 export const useConversationMessages = (conversationId, limit = 100) => {
   const { 
     data: messagesData, 
@@ -48,7 +46,6 @@ export const useConversationMessages = (conversationId, limit = 100) => {
   };
 };
 
-// Hook to create a new conversation
 export const useCreateConversation = () => {
   const { mutate, loading, error, data } = useMutation();
 
@@ -59,7 +56,6 @@ export const useCreateConversation = () => {
   return { createConversation, loading, error, data };
 };
 
-// Hook to delete a conversation
 export const useDeleteConversation = () => {
   const { mutate, loading, error } = useMutation();
 
@@ -70,7 +66,6 @@ export const useDeleteConversation = () => {
   return { deleteConversation, loading, error };
 };
 
-// Hook to update conversation title
 export const useUpdateConversationTitle = () => {
   const { mutate, loading, error } = useMutation();
 
@@ -81,7 +76,6 @@ export const useUpdateConversationTitle = () => {
   return { updateTitle, loading, error };
 };
 
-// Hook for sending messages in a conversation
 export const useSendMessage = () => {
   const { mutate, loading, error, data } = useMutation();
 
@@ -92,7 +86,6 @@ export const useSendMessage = () => {
   return { sendMessage, loading, error, data };
 };
 
-// Hook for managing conversation state (for chat interface)
 export const useConversationState = (initialConversationId = null) => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [conversations, setConversations] = useState([]);
@@ -137,7 +130,6 @@ export const useConversationState = (initialConversationId = null) => {
   };
 };
 
-// Hook for pagination
 export const useConversationsPagination = (searchTerm = '', limit = 20) => {
   const [offset, setOffset] = useState(0);
   const [allConversations, setAllConversations] = useState([]);
@@ -188,5 +180,97 @@ export const useConversationsPagination = (searchTerm = '', limit = 20) => {
     loadMore,
     refresh,
     total: conversationsData?.total || 0
+  };
+};
+
+
+export const useStreamingConversation = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const abortControllerRef = useRef(null);
+
+  const streamMessage = async (conversationId, query, onChunk, onComplete, onError) => {
+    setLoading(true);
+    setIsStreaming(true);
+    setError(null);
+
+    try {
+      const response = await conversationAPI.streamConversationMessage(conversationId, query);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      if (!response.body) {
+        throw new Error('ReadableStream not supported in this browser');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      abortControllerRef.current = { cancel: () => reader.cancel() };
+      
+      let done = false;
+      let accumulatedResponse = '';
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        
+        if (value) {
+          const chunk = decoder.decode(value);
+          
+          const lines = chunk.split('\n');
+          
+          for (const line of lines) {
+            console.log("this is line : ", line)
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6); // Remove 'data: ' prefix
+              console.log("this is data : ", data)
+              if (data === 'done' || data === '[DONE]') {
+                done = true;
+                break;
+              }
+              
+              if (data.trim()) {
+                accumulatedResponse += data;
+                onChunk && onChunk(data, accumulatedResponse);
+              }
+            } else if (line.startsWith('event: done')) {
+              done = true;
+              break;
+            }
+          }
+        }
+      }
+      
+      onComplete && onComplete(accumulatedResponse);
+      
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        const errorMessage = err.message || 'Failed to stream message';
+        setError(errorMessage);
+        onError && onError(errorMessage);
+      }
+    } finally {
+      setLoading(false);
+      setIsStreaming(false);
+    }
+  };
+
+  const stopStreaming = () => {
+    if (abortControllerRef.current && isStreaming) {
+      abortControllerRef.current.cancel();
+      setLoading(false);
+      setIsStreaming(false);
+    }
+  };
+
+  return {
+    streamMessage,
+    stopStreaming,
+    loading,
+    error,
+    isStreaming
   };
 };

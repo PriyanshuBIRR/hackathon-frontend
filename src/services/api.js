@@ -42,7 +42,6 @@ if (import.meta.env.DEV && ENABLE_LOGGING) {
   );
 }
 
-// Request interceptor for auth tokens
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
@@ -54,7 +53,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor for global error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {

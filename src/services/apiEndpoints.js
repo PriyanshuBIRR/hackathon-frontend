@@ -7,7 +7,6 @@ export const rootAPI = {
 
 // File Upload APIs
 export const uploadAPI = {
-  // Upload factsheet PDF with background processing
   uploadFactsheet: (file, filename = 'factsheet') => {
     const formData = new FormData();
     formData.append('file', file);
@@ -21,7 +20,6 @@ export const uploadAPI = {
     });
   },
 
-  // Upload JSON documents
   uploadDocuments: (file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -34,12 +32,9 @@ export const uploadAPI = {
   },
 };
 
-// Query APIs
 export const queryAPI = {
-  // Regular query
   runQuery: (query) => api.post('/query', { query }),
 
-  // Streaming query
   streamQuery: (query) => {
     return fetch(`${api.defaults.baseURL}/stream/query`, {
       method: 'POST',
@@ -52,9 +47,7 @@ export const queryAPI = {
   },
 };
 
-// Conversation APIs
 export const conversationAPI = {
-  // Start a new conversation
   startConversation: (query) => api.post('/conversations/', { query }),
 
   listConversations: (search = null, limit = 50, offset = 0) => {
@@ -63,7 +56,6 @@ export const conversationAPI = {
     return api.get('/conversations/', { params });
   },
 
-  // Get all messages from a specific conversation
   getConversationMessages: (conversationId, limit = 100, offset = 0) => {
     return api.get(`/conversations/${conversationId}/messages/`, {
       params: { limit, offset }
@@ -71,10 +63,8 @@ export const conversationAPI = {
   },
 
 
-  // Regular chat
   chat: (conversationId, query) => api.post(`/chat/${conversationId}`, { query }),
 
-  // Streaming chat
   streamChat: (conversationId, query) => {
     return fetch(`${api.defaults.baseURL}/stream/chat/${conversationId}`, {
       method: 'POST',
@@ -89,4 +79,15 @@ export const conversationAPI = {
   // Add message to conversation
   addMessage: (conversationId, query) => 
     api.post(`/conversations/${conversationId}/messages/`, { query }),
+
+    streamConversationMessage: (conversationId, query) => {
+    return fetch(`${api.defaults.baseURL}/conversations/${conversationId}/messages/stream`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`,
+      },
+      body: JSON.stringify({ query }),
+    });
+  },
 };

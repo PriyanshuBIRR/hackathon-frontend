@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ChatHeader = ({ onMenuClick, conversation }) => {
   return (
     <header className="border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
@@ -12,7 +10,7 @@ const ChatHeader = ({ onMenuClick, conversation }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
-        <h2 className="text-lg font-semibold dark:text-white">{conversation.title}</h2>
+        <h2 className="text-lg font-semibold dark:text-white">{conversation?.title || 'Select or create a Chat'}</h2>
         <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-sm text-gray-600 dark:text-gray-300">Fast</span>
       </div>
       <div className="flex items-center gap-3">

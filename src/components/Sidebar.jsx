@@ -7,7 +7,6 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Use the conversations hook
   const { conversations, loading, error, refetch } = useConversations(searchTerm);
   const { createConversation, loading: creating } = useCreateConversation();
 
@@ -22,12 +21,12 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
   const handleCreateConversation = async (title) => {
     try {
       const newConversation = await createConversation(title);
-      refetch(); // Refresh the conversations list
+      refetch();
       onSelectConversation && onSelectConversation(newConversation);
       return newConversation;
     } catch (error) {
       console.error('Failed to create conversation:', error);
-      throw error; // Let modal handle the error
+      throw error; 
     }
   };
 
@@ -37,7 +36,6 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
 
   const handleConversationClick = (conversation) => {
     onSelectConversation && onSelectConversation(conversation);
-    // Close sidebar on mobile after selection
     if (window.innerWidth < 768) {
       onClose();
     }
@@ -45,7 +43,6 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
 
   return (
     <>
-      {/* Mobile backdrop */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
@@ -57,7 +54,6 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
         w-72 bg-gray-50 dark:bg-gray-800 p-4 border-r border-gray-200 dark:border-gray-700
         ${isOpen ? 'fixed inset-y-0 left-0 z-50 md:relative' : 'hidden md:flex flex-col'}
       `}>
-        {/* Logo */}
         <div className="flex items-center gap-2 mb-8">
           <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +63,6 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
           <h1 className="text-xl font-bold dark:text-white">BIRR GPT</h1>
         </div>
 
-        {/* Create New Chat Button */}
         <button
           onClick={handleCreateChat}
           disabled={creating}
@@ -82,7 +77,6 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
           {creating ? 'Creating...' : 'New Chat'}
         </button>
 
-        {/* Search */}
         <div className="relative mb-6">
           <input 
             type="search" 
@@ -93,9 +87,7 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
           />
         </div>
 
-        {/* Navigation - Conversations List */}
         <nav className="space-y-2 flex-1 overflow-y-auto">
-          {/* Header with count */}
           <div className="flex items-center justify-between px-3 py-2">
             <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,35 +100,31 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
             </span>
           </div>
 
-          {/* Loading state */}
           {loading && (
             <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
               Loading chats...
             </div>
           )}
 
-          {/* Error state */}
           {error && (
             <div className="px-3 py-2 text-sm text-red-500">
               Error loading chats
             </div>
           )}
 
-          {/* Empty state */}
           {!loading && !error && conversations.length === 0 && (
             <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
               {searchTerm ? 'No chats found' : 'No chats yet. Create your first chat!'}
             </div>
           )}
 
-          {/* Conversations List */}
           {conversations.map((conversation) => (
             <button
               key={conversation.id}
               onClick={() => handleConversationClick(conversation)}
               className={`w-full text-left px-3 py-2 rounded-lg transition-colors group relative ${
                 selectedConversationId === conversation.id
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary text-white bg-opacity-50'
                   : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
