@@ -132,9 +132,7 @@ const QueryUI = () => {
 
   return (
     <div className="flex flex-col w-full h-full p-6">
-      {/* Query Input Section */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold dark:text-white mb-4">Ask a Question</h1>
         
         <form onSubmit={handleSubmit}>
           <div className="relative">
@@ -197,7 +195,6 @@ const QueryUI = () => {
 
         {responses.map((item) => (
           <div key={item.id} className="space-y-4">
-            {/* User Query */}
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border-l-4 border-primary">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
@@ -212,7 +209,6 @@ const QueryUI = () => {
               </div>
             </div>
 
-            {/* AI Response */}
             <div className={`rounded-lg p-4 border ${
               item.hasError
                 ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'

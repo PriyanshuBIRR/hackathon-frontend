@@ -1,11 +1,19 @@
-import ChatUI from './components/ChatUI';
+import ChatUI from './pages/ChatUI';
 import './index.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
-    <div className="h-full bg-white dark:bg-gray-900">
-      <ChatUI />
-    </div>
+    <Router>
+
+      <main className="h-[calc(100vh-4rem)]"> {/* Subtract navigation height */}
+        <Routes>
+          <Route path="/" element={<ChatUI />} />
+          <Route path="/settings" element={<SettingsPage />} />
+        </Routes>
+      </main>
+    </Router>
   );
 }
 

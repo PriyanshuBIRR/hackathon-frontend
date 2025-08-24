@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
-import ChatHeader from './ChatHeader';
-import MessageList from './MessageList';
-import MessageInput from './MessageInput';
-import QueryUI from './QueryUI';
+import { useState, useEffect } from 'react';
+import Sidebar from '../components/Sidebar';
+import ChatHeader from '../components/ChatHeader';
+import MessageList from '../components/MessageList';
+import MessageInput from '../components/MessageInput';
+import QueryUI from '../components/QueryUI';
 import { useConversationMessages, useCreateConversation, useStreamingConversation } from '../hooks/useConversation';
 
 const ChatUI = () => {
@@ -263,16 +263,15 @@ const ChatUI = () => {
         onSelectConversation={handleSelectConversation}
         selectedConversationId={selectedConversation?.id}
       />
-
-      {isConversation ? (
-        <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col">
           <ChatHeader
             onMenuClick={() => setSidebarOpen(true)}
-            conversation={selectedConversation}
+            conversation={isConversation ? selectedConversation : {"title" : "Ask a Question"}}
             onClearConversation={handleClearConversation}
           />
-
-          {selectedConversation ? (
+      {isConversation ? 
+        
+          selectedConversation ? (
             <>
               <MessageList
                 messages={displayMessages}
@@ -304,13 +303,13 @@ const ChatUI = () => {
                 <p className="text-sm">Choose from your conversations in the sidebar, or create a new one</p>
               </div>
             </div>
-          )}
-        </main>
-      ) : (
-        <main className="flex-1 flex flex-col">
+          )
+          : (
+            <main className="flex-1 flex flex-col">
           <QueryUI />
         </main>
       )}
+      </main>
     </div>
   );
 };

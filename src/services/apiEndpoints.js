@@ -5,7 +5,11 @@ export const rootAPI = {
   getRoot: () => api.get('/'),
 };
 
-// File Upload APIs
+export const documentAPI = {
+  getAllDocuments() {
+    return api.get('/documents')
+  }
+}
 export const uploadAPI = {
   uploadFactsheet: (file, filename = 'factsheet') => {
     const formData = new FormData();
