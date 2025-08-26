@@ -20,16 +20,16 @@ export const useAPI = (apiCall, dependencies = [], options = {}) => {
 
       abortControllerRef.current = new AbortController();
       const response = await apiCall();
-      
+
       setData(response.data);
       onSuccess?.(response.data);
     } catch (err) {
       if (err.name === 'AbortError') return;
-      
-      const errorMessage = err.response?.data?.detail || 
-                          err.response?.data?.message || 
-                          err.message || 
-                          'An error occurred';
+
+      const errorMessage = err.response?.data?.detail ||
+        err.response?.data?.message ||
+        err.message ||
+        'An error occurred';
       setError(errorMessage);
       onError?.(err);
     } finally {
@@ -39,7 +39,7 @@ export const useAPI = (apiCall, dependencies = [], options = {}) => {
 
   useEffect(() => {
     if (immediate) fetchData();
-    
+
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
@@ -60,15 +60,15 @@ export const useMutation = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await apiCall();
       setData(response.data);
       return response.data;
     } catch (err) {
-      const errorMessage = err.response?.data?.detail || 
-                          err.response?.data?.message || 
-                          err.message || 
-                          'An error occurred';
+      const errorMessage = err.response?.data?.detail ||
+        err.response?.data?.message ||
+        err.message ||
+        'An error occurred';
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -104,7 +104,7 @@ export const useStreamingQuery = () => {
 
         const chunk = new TextDecoder().decode(value);
         const lines = chunk.split('\n');
-        
+
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.slice(6);
@@ -112,7 +112,11 @@ export const useStreamingQuery = () => {
               setIsStreaming(false);
               break;
             }
+            console.log(`this is data : '${data}'`)
             setResponse(prev => prev + data);
+          } else if (line.startsWith('event: done')) {
+            setIsStreaming(false);
+            break;
           }
         }
       }
@@ -132,13 +136,13 @@ export const useStreamingQuery = () => {
     }
   }, []);
 
-  return { 
-    streamQuery, 
-    response, 
-    loading, 
-    error, 
-    isStreaming, 
+  return {
+    streamQuery,
+    response,
+    loading,
+    error,
+    isStreaming,
     stopStreaming,
-    setResponse 
+    setResponse
   };
 };

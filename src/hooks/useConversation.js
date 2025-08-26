@@ -219,14 +219,11 @@ export const useStreamingConversation = () => {
         
         if (value) {
           const chunk = decoder.decode(value);
-          
           const lines = chunk.split('\n');
           
           for (const line of lines) {
-            console.log("this is line : ", line)
             if (line.startsWith('data: ')) {
-              const data = line.slice(6); // Remove 'data: ' prefix
-              console.log("this is data : ", data)
+              const data = line.slice(6); 
               if (data === 'done' || data === '[DONE]') {
                 done = true;
                 break;
