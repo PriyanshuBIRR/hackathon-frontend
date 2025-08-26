@@ -131,8 +131,8 @@ const QueryUI = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full p-6">
-      <div className="mb-8">
+    <div className="flex flex-col w-full h-full">
+      <div className="m-6 mb-8">
         
         <form onSubmit={handleSubmit}>
           <div className="relative">
@@ -194,7 +194,7 @@ const QueryUI = () => {
         )}
 
         {responses.map((item) => (
-          <div key={item.id} className="space-y-4">
+          <div key={item.id} className="space-y-4 px-6 pb-8">
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border-l-4 border-primary">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
@@ -242,7 +242,7 @@ const QueryUI = () => {
                   </div>
                   
                   {item.response ? (
-                    <div className={`leading-relaxed whitespace-pre-wrap ${
+                    <div className={`leading-relaxed whitespace-pre-wrap break-all ${
                       item.hasError 
                         ? 'text-red-700 dark:text-red-300'
                         : 'text-gray-700 dark:text-gray-300'

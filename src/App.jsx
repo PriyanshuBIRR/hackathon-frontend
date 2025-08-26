@@ -7,7 +7,7 @@ function App() {
   return (
     <Router>
 
-      <main className="h-[calc(100vh-4rem)]"> {/* Subtract navigation height */}
+      <main className="h-full"> 
         <Routes>
           <Route path="/" element={<ChatUI />} />
           <Route path="/settings" element={<SettingsPage />} />
