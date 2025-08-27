@@ -27,12 +27,12 @@ const MessageList = ({ messages }) => {
                 </div>
               )}
             </div>
-            <div className={`rounded-lg p-4 shadow-sm ${message.isError
+            <div className={`rounded-lg p-4 shadow-sm overflow-hidden ${message.isError
                 ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
                 : 'bg-white dark:bg-gray-800 dark:text-gray-200'
               }`}>
               {message.content ?
-                <div className="prose prose-sm max-w-none dark:prose-invert">
+                <div className="prose prose-sm max-w-none dark:prose-invert wrap-break-word" style={{overflowWrap: 'break-word'}}>
                         <MarkdownMessage message={message.content} />
                   {message.isStreaming && (
                     <span className="inline-block w-2 h-5 bg-gray-400 dark:bg-gray-500 animate-pulse ml-1 align-text-bottom"></span>
