@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-// import ReactMarkdown from 'react-markdown';
-// import remarkGfm from 'remark-gfm';
+import MarkdownMessage from './MarkdownMessage';
 import api from '../services/api'
 
 const QueryUI = () => {
@@ -35,7 +34,6 @@ const QueryUI = () => {
     };
     setResponses(prev => [...prev, newResponse]);
 
-    // Create abort controller
     abortControllerRef.current = new AbortController();
     let accumulatedResponse = '';
 
@@ -51,7 +49,6 @@ const QueryUI = () => {
 
         async onopen(response) {
           if (response.ok && response.headers.get('content-type')?.includes('text/event-stream')) {
-            console.log('Stream connection established');
             return;
           } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
             throw new FatalError();
@@ -61,8 +58,6 @@ const QueryUI = () => {
         },
 
         onmessage(event) {
-          console.log('Received message:', event);
-
           if (event.data === '[DONE]' || event.data === 'done' || event.data === '[COMPLETE]') {
             console.log('Stream completed');
             setResponses(prev =>
@@ -75,19 +70,13 @@ const QueryUI = () => {
             return;
           }
 
-          // if (!event.data || !event.data.trim()) {
-          //   return;
-          // }
-
           let content = event.data;
           if (content === '') content = '\n';
           accumulatedResponse += content;
           updateResponse(newResponse.id, accumulatedResponse);
-          console.log("this is final : ", accumulatedResponse)
         },
 
         onclose() {
-          console.log('Stream connection closed');
           setResponses(prev =>
             prev.map(item =>
               item.id === newResponse.id
@@ -144,7 +133,6 @@ const QueryUI = () => {
 
   const handleStopStreaming = () => {
     if (abortControllerRef.current && isStreaming) {
-      console.log('Stopping stream...');
       abortControllerRef.current.abort();
       setIsLoading(false);
       setIsStreaming(false);
@@ -165,7 +153,6 @@ const QueryUI = () => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      {/* Input Form */}
       <div className="m-6 mb-8">
         <form onSubmit={handleSubmit}>
           <div className="relative">
@@ -246,8 +233,8 @@ const QueryUI = () => {
 
             {/* AI Response */}
             <div className={`rounded-lg p-4 border ${item.hasError
-                ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
-                : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700'
+              ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+              : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700'
               }`}>
               <div className="flex items-start gap-3">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${item.hasError ? 'bg-red-500' : 'bg-secondary'
@@ -277,19 +264,13 @@ const QueryUI = () => {
                   </div>
 
                   {item.response ? (
-                    <div className={`prose prose-sm max-w-none dark:prose-invert whitespace-pre-wrap break-all ${item.hasError ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300'
+                    <article className={`prose prose-sm max-w-none dark:prose-invert break-all ${item.hasError ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300'
                       }`}>
-                      {/* <ReactMarkdown remarkPlugins={[remarkGfm]}> */}
-
-                        <pre className='whitespace-pre-wrap break-all'>
-                          {item.response}
-                        </pre>
-                      {/* </ReactMarkdown> */}
-
+                        <MarkdownMessage message={item.response}/>
                       {item.isStreaming && (
                         <span className="inline-block w-2 h-5 bg-gray-400 dark:bg-gray-500 animate-pulse ml-1 align-text-bottom"></span>
                       )}
-                    </div>
+                    </article>
                   ) : (
                     <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                       <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></div>
@@ -308,7 +289,6 @@ const QueryUI = () => {
   );
 };
 
-// Custom error classes for better error handling
 class FatalError extends Error { }
 class RetriableError extends Error { }
 

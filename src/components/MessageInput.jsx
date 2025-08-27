@@ -20,10 +20,10 @@ const MessageInput = ({ onSendMessage, disabled, placeholder, isStreaming, onSto
 
   return (
     <div className="border-t border-gray-200 dark:border-gray-700 p-4">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <form onSubmit={handleSubmit}>
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 justify-between">
               <button 
                 type="button"
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
@@ -34,7 +34,7 @@ const MessageInput = ({ onSendMessage, disabled, placeholder, isStreaming, onSto
                 </svg>
               </button>
               
-              <button 
+              {/* <button 
                 type="button"
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                 disabled={disabled}
@@ -42,7 +42,7 @@ const MessageInput = ({ onSendMessage, disabled, placeholder, isStreaming, onSto
                 <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"/>
                 </svg>
-              </button>
+              </button> */}
               
               {/* Stop Streaming Button */}
               {isStreaming && onStopStreaming && (

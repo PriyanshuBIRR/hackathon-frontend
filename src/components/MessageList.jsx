@@ -1,10 +1,10 @@
-import React from 'react';
+import MarkdownMessage from './MarkdownMessage';
 
 const MessageList = ({ messages }) => {
   return (
     <div className="flex-1 overflow-auto p-4 space-y-6">
       {messages.map((message) => (
-        <div key={message.id} className="flex gap-4 max-w-3xl mx-auto">
+        <div key={message.id} className="flex gap-4 max-w-5xl mx-auto">
           <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center ${message.isUser
               ? 'bg-gray-200 dark:bg-gray-700'
               : message.isError
@@ -32,8 +32,8 @@ const MessageList = ({ messages }) => {
                 : 'bg-white dark:bg-gray-800 dark:text-gray-200'
               }`}>
               {message.content ?
-                <div className="whitespace-pre-wrap">
-                  {message.content}
+                <div className="prose prose-sm max-w-none dark:prose-invert break-all">
+                        <MarkdownMessage message={message.content} />
                   {message.isStreaming && (
                     <span className="inline-block w-2 h-5 bg-gray-400 dark:bg-gray-500 animate-pulse ml-1 align-text-bottom"></span>
                   )}
