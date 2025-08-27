@@ -17,7 +17,7 @@ const MessageList = ({ messages }) => {
               </svg>
             )}
           </div>
-          <div className="flex-1">
+          <div className="flex-1  overflow-hidden">
             <div className="flex items-center gap-2 mb-1">
               <div className="font-medium dark:text-white">{message.sender}</div>
               {message.isStreaming && (
@@ -32,7 +32,7 @@ const MessageList = ({ messages }) => {
                 : 'bg-white dark:bg-gray-800 dark:text-gray-200'
               }`}>
               {message.content ?
-                <div className="prose prose-sm max-w-none dark:prose-invert break-all">
+                <div className="prose prose-sm max-w-none dark:prose-invert">
                         <MarkdownMessage message={message.content} />
                   {message.isStreaming && (
                     <span className="inline-block w-2 h-5 bg-gray-400 dark:bg-gray-500 animate-pulse ml-1 align-text-bottom"></span>

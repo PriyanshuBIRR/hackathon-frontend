@@ -2,6 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { useAPI } from '../hooks/useAPI';
 import { documentAPI } from '../services/apiEndpoints';
 
+const statusConfig = {
+    pending: {
+      className: 'bg-yellow-100 text-yellow-500 border-yellow-200',
+      label: 'Pending',
+      dotColor: 'bg-yellow-500 animate-pulse'
+    },
+    completed: {
+      className: 'bg-green-100 text-green-500 border-green-200', 
+      label: 'Completed',
+      dotColor: 'bg-green-500'
+    },
+    failed: {
+      className: 'bg-red-100 text-red-500 border-red-200',
+      label: 'Failed', 
+      dotColor: 'bg-red-500'
+    }
+  };
+
+
 const DocumentList = () => {
   const [documents, setDocuments] = useState([]);
   const { data, loading, error } = useAPI(() => documentAPI.getAllDocuments(), []);
@@ -11,17 +30,6 @@ const DocumentList = () => {
       setDocuments(data.documents || []);
     }
   }, [data]);
-
-  const handleDelete = async (documentId) => {
-    if (window.confirm('Are you sure you want to delete this document?')) {
-      try {
-        // Add delete API call here if available
-        setDocuments(prev => prev.filter(doc => doc.id !== documentId));
-      } catch (error) {
-        console.error('Failed to delete document:', error);
-      }
-    }
-  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -117,6 +125,10 @@ const DocumentList = () => {
                 </div>
 
                 <div className="flex items-center space-x-2">
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium border bg-opacity-20 ${statusConfig[document.status].className}`}>
+                    <div className={`w-2 h-2 rounded-full mr-1.5 ${statusConfig[document.status].dotColor}`} />
+                    {statusConfig[document.status].label}
+                  </span>
                   {document.url && (
                     <a
                       href={document.url}
@@ -132,15 +144,7 @@ const DocumentList = () => {
                     </a>
                   )}
                   
-                  <button
-                    onClick={() => handleDelete(document.id)}
-                    className="p-2 text-gray-400 hover:text-red-600 transition-colors"
-                    title="Delete document"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                  </button>
+                  
                 </div>
               </div>
             </div>

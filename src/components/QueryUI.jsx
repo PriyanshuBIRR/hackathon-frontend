@@ -224,7 +224,7 @@ const QueryUI = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 overflow-hidden">
                   <div className="font-medium dark:text-white mb-1">Your Question</div>
                   <div className="text-gray-700 dark:text-gray-300">{item.query}</div>
                 </div>
@@ -250,10 +250,10 @@ const QueryUI = () => {
                   )}
                 </div>
 
-                <div className="flex-1">
+                <div className="flex-1  overflow-hidden">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="font-medium dark:text-white">
-                      {item.hasError ? 'Error Response' : 'AI Response'}
+                      {item.hasError ? 'Error Response' : 'Fynexion'}
                     </div>
                     {item.isStreaming && (
                       <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
@@ -264,7 +264,7 @@ const QueryUI = () => {
                   </div>
 
                   {item.response ? (
-                    <article className={`prose prose-sm max-w-none dark:prose-invert break-all ${item.hasError ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300'
+                    <article className={`prose prose-sm max-w-none dark:prose-invert wrap-break-word ${item.hasError ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300'
                       }`}>
                         <MarkdownMessage message={item.response}/>
                       {item.isStreaming && (

@@ -60,7 +60,7 @@ const Sidebar = ({ isOpen, onClose, handleToggle, isConversation, onSelectConver
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
             </svg>
           </div>
-          <h1 className="text-xl font-bold dark:text-white">BIRR GPT</h1>
+          <h1 className="text-xl font-bold dark:text-white">Fynexion</h1>
         </div>
 
         <button

@@ -32,7 +32,7 @@ const ChatUI = () => {
     if (selectedConversation && apiMessages && !messagesLoading) {
       const messages = apiMessages.map((message) => ({
         ...message,
-        sender: message.role === 'user' ? 'You' : 'BIRRGPT',
+        sender: message.role === 'user' ? 'You' : 'Fynexion',
         isUser: message.role === 'user',
       }));
       setLocalMessages(messages);
@@ -100,7 +100,7 @@ const ChatUI = () => {
 
     const aiMessage = {
       id: Date.now() + 1,
-      sender: 'BIRRGPT',
+      sender: 'Fynexion',
       content: '',
       isUser: false,
       created_at: new Date(),
